@@ -16,7 +16,7 @@ def username(n: str, l: list):
         t = False
     return t
 
-def auto_reg():
+def auto_pass():
     """
     Генерация пароля
 
@@ -34,11 +34,51 @@ def auto_reg():
     # Извлекаем из списка 12 произвольных значений
     psword = ''.join([random.choice(ls) for x in range(12)])
     # Пароль готов
-    print(psword)
+    print(f'Ваш пароль: {psword}')
     return psword
 
-def my_reg():
-    pass
+def my_pass():
+    print("Пароль должен состоять минимум из 8 символов, иметь мин. 1 цифру, 1 большую и маленькую букву и 1 спецсимвол")
+    p = input('Введите пароль:')
+    while t != False:
+        if p >= len(p):
+            print('Пароль должен состоять минимум из 8 символов')
+            t = True
+        if p.isidigit():
+            print('В пароле нет цифр')
+            t = True
+        if p.islower():
+            print('В пароле нет букв в нижнем регистре')
+            t = True
+        if p.isupper():
+            print('В пароле нет букв в верхнем регистре')
+            t = True
+        sym = '.,:;!_*-+()/#¤%&)'
+        if p.isdisjoint(sym):
+            print('В пароле нет спецсимволов')
+            t = True
+            p = passw
+        break
+    return passw
+
+def passw():
+    if p >= len(p):
+        print('Пароль должен состоять минимум из 8 символов')
+        t = True
+    if p.isidigit():
+        print('В пароле нет цифр')
+        t = True
+    if p.islower():
+        print('В пароле нет букв в нижнем регистре')
+        t = True
+    if p.isupper():
+        print('В пароле нет букв в верхнем регистре')
+        t = True
+    sym = '.,:;!_*-+()/#¤%&)'
+    if p.isdisjoint(sym):
+        print('В пароле нет спецсимволов')
+        t = True
+        p = passw
 
 def author():
     return
@@ -49,22 +89,23 @@ def reg(l: list, p: list):
 
     Возвращает списки логинов и паролей
 
-    :param str v: метод создания пароля
     :rtype: list, list
     """
     print('Регистрация'.center(24, ))
+
     n = input('Введите логин: ')
     u = username(n, login_list)
     while u == True:
         n = input('Такой логин уже существует.\nВведите еще раз: ')
         u = username(n, login_list)
+
     v = input('Создать пароль автоматически или нет? y/n: ')
     if v == 'y':
-        p = auto_reg()
-        login_list.append(n)
-        pass_list.append(p)
+        p = auto_pass()
     else:
-        my_reg()
+        p = my_pass()
+    login_list.append(n)
+    pass_list.append(p)
     return l, p
 
 while 1:
