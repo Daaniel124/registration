@@ -1,4 +1,5 @@
 import random
+import re
 login_list = ['den', 'den2']
 pass_list = ['1234', '12345']
 
@@ -32,56 +33,80 @@ def auto_pass():
     ls = list(str4)
     random.shuffle(ls)
     # Извлекаем из списка 12 произвольных значений
-    psword = ''.join([random.choice(ls) for x in range(12)])
+    password = ''.join([random.choice(ls) for x in range(12)])
     # Пароль готов
-    print(f'Ваш пароль: {psword}')
-    return psword
+    print(f'Ваш пароль: {password}')
+    return password
 
 def my_pass():
-    print("Пароль должен состоять минимум из 8 символов, иметь мин. 1 цифру, 1 большую и маленькую букву и 1 спецсимвол")
-    p = input('Введите пароль:')
-    while t != False:
-        if p >= len(p):
-            print('Пароль должен состоять минимум из 8 символов')
-            t = True
-        if p.isidigit():
-            print('В пароле нет цифр')
-            t = True
-        if p.islower():
-            print('В пароле нет букв в нижнем регистре')
-            t = True
-        if p.isupper():
-            print('В пароле нет букв в верхнем регистре')
-            t = True
-        sym = '.,:;!_*-+()/#¤%&)'
-        if p.isdisjoint(sym):
-            print('В пароле нет спецсимволов')
-            t = True
-            p = passw
-        break
-    return passw
+    '''
+    Печать условий для пароля
 
-def passw():
-    if p >= len(p):
-        print('Пароль должен состоять минимум из 8 символов')
-        t = True
-    if p.isidigit():
-        print('В пароле нет цифр')
-        t = True
-    if p.islower():
-        print('В пароле нет букв в нижнем регистре')
-        t = True
-    if p.isupper():
-        print('В пароле нет букв в верхнем регистре')
-        t = True
+    Возвращает пароль в str
+
+    :rtype: str
+    '''
+    print("Пароль должен состоять минимум из 8 символов, иметь мин. 1 цифру, 1 большую и маленькую букву и 1 спецсимвол")
+    password = input('Введите пароль:')
     sym = '.,:;!_*-+()/#¤%&)'
-    if p.isdisjoint(sym):
+    i = 0
+    while True:
+        if passw(password) == True:
+            break
+        else:
+            password = input('Введите пароль:')
+            i += 1
+            if password == 'y':
+                return
+            elif i > 1:
+                print('Хотите завершить регистрацию? Напишите y')
+    return password
+
+def passw(p: str):
+    '''
+    Проверка пароля на условия
+
+    Возвращает True или False
+
+    :param str p: введеный пароль пользователя
+    :rtype: bool
+    '''
+    if len(p) < 8:
+        print('Пароль должен состоять минимум из 8 символов')
+    elif re.search('[0-9]', p) is None:
+        print('В пароле нет цифр')
+    elif re.search('[a-z]', p) is None:
+        print('В пароле нет букв в нижнем регистре')
+    elif re.search('[A-Z]', p) is None:
+        print('В пароле нет букв в верхнем регистре')
+    elif re.search('[@#$%^&+=]', p) is None:
         print('В пароле нет спецсимволов')
-        t = True
-        p = passw
+    else:
+        print('Ваш пароль надежный')
+        return True
+    return False
 
 def author():
-    return
+    '''
+    Авторизация в сети
+
+    Возвращает True или False
+
+    :rtype: bool
+    '''
+    n = input('Введите логин: ')
+    u = username(n, login_list)
+    if u == True:
+        login = login_list.index(n)
+        n = input('Введите пароль: ')
+        if pass_list[login] == n:
+            return True
+        else:
+            print('Неправильный пароль')
+            return False
+    else:
+        print('Неправильный логин')
+        return False
 
 def reg(l: list, p: list):   
     """
@@ -95,17 +120,27 @@ def reg(l: list, p: list):
 
     n = input('Введите логин: ')
     u = username(n, login_list)
+    i = 0
     while u == True:
         n = input('Такой логин уже существует.\nВведите еще раз: ')
         u = username(n, login_list)
+        i += 1
+        if i > 1:
+            print("Хотите завершить регистрацию? Напишите y")
+            if n == 'y':
+                print('Завершаем..')
+                return
+
 
     v = input('Создать пароль автоматически или нет? y/n: ')
     if v == 'y':
         p = auto_pass()
     else:
         p = my_pass()
+
     login_list.append(n)
     pass_list.append(p)
+    print('Регистрация завершена'.center(33, ))
     return l, p
 
 while 1:
@@ -114,22 +149,18 @@ while 1:
     if v == '1':
         reg(login_list, pass_list)
     elif v == '2':
+        print('Авторизация'.center(24, ' '))
         i = 0
         while i < 3:
             t = author() #True or False
-            if author() == True:
-                print('Добро пожаловать!')
+            if t == True:
+                print('Добро пожаловать!'.center(30, ' '))
+                i = 3
             else:
                 i+=1
-#        else:
-   #         v = input("Хотите зарегестрироваться? y/n: ")
-   #         if v == 'y':
-    #            reg()
-     #       else:
-     #           pass
     elif v == '3':
         print(login_list)
         print(pass_list)
     else:
-        print('Выход..')
+        print('Выход..'.center(24, ' '))
         break
